@@ -1,5 +1,5 @@
-from os import listdir
-from os.path import isfile, join, realpath
+from os import listdir, makedirs
+from os.path import isfile, join, realpath, exists
 from skimage import data, color, io
 from skimage.io import imread, imsave
 from skimage.transform import rescale, resize, downscale_local_mean
@@ -9,10 +9,13 @@ def resize_and_save_img(file, new_size, parent=""):
     image = imread(parent+file)
     extension = file.split(".")[-1]
     image_resized = resize(image, (image.shape[0] // (1 // new_size), image.shape[1] // (1 // new_size)), anti_aliasing=True)
+    save_dir = parent + "/resized-images/"
+    if not exists(save_dir):
+        makedirs(save_dir)
     if extension != "png":
-        imsave(parent + "new-" + file, image_resized, quality=100)
+        imsave(save_dir + file, image_resized, quality=100)
     else:
-        imsave(parent + "new-" + file, image_resized)
+        imsave(save_dir + file, image_resized)
 
 
 def is_image(file_path):
